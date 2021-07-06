@@ -2,8 +2,8 @@ from app.main import db, engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import *
 
-Base = declarative_base()
-metadata = MetaData(bind = engine)
+# Base = declarative_base()
+# metadata = MetaData(bind = engine)
 
 
 class EPIROC(db.Model):
@@ -18,8 +18,6 @@ class EPIROC(db.Model):
     holeID = db.Column(db.String(32))
     depth = db.Column(db.Float)
     Time = db.Column(db.String(50))
-
-
 
 
 class BlastCluster(db.Model):
@@ -39,6 +37,7 @@ class BlastCluster(db.Model):
 
     def serialize(self):
         return {'holeID': self.holeID, 'depth': self.depth, 'CID': self.CID, 'x': self.x, 'y': self.y}
+
 
 class BlastReport(db.Model):
     __tablename__ = 'BlastReport'

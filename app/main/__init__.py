@@ -15,6 +15,7 @@ def create_app(config_name):
     db.init_app(app)
 
     with app.app_context():
+        print(os.environ.get('DATABASE_LINK'))
         db.create_all()
 
     return app
