@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from flask_restful import Api
 
 db = SQLAlchemy()
-engine = create_engine(os.environ.get('DATABASE_URL'))
+engine = create_engine(os.environ.get('DATABASE_LINK'))
 
 
 def create_app(config_name):

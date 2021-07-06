@@ -8,7 +8,7 @@ load_dotenv(path.join(basedir, '.env'))
 class Config:
     DEBUG = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = environ.get('DATABASE_LINK')
 
 
 class DevConfig(Config):
