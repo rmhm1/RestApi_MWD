@@ -7,8 +7,18 @@ metadata = MetaData(bind = engine)
 
 
 class EPIROC(db.Model):
-    __table__ = Table('EPIROC', metadata, Column('Time', String, primary_key = True), autoload= True)
-    # __tablename__ = 'EPIROC'
+    #__table__ = Table('EPIROC', metadata, Column('Time', String, primary_key = True), autoload= True)
+    __tablename__ = 'EPIROC'
+    index = db.Column(db.Integer, primary_key=True)
+    PenetrRate = db.Column(db.Float)
+    PercPressure = db.Column(db.Float)
+    FeedPressure = db.Column(db.Float)
+    RotPressure = db.Column(db.Float)
+    InstRotPressure = db.Column(db.Float)
+    holeID = db.Column(db.String(32))
+    depth = db.Column(db.Float)
+    Time = db.Column(db.String(50))
+
 
 
 
@@ -43,7 +53,7 @@ class BlastReport(db.Model):
         self.report = report
         self.score = score
 
-    def json(self):
+    def serialize(self):
         return {'holeID': self.holeID, 'depth': self.depth, 'report': self.report, 'score': self.score}
 
     def __repr__(self):

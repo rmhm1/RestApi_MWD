@@ -55,20 +55,20 @@ report_parse.add_argument('score', type = int, help = 'Rating of the Blast', req
 class Report(Resource):
     def get(self, projectID, holeID):
         result = BlastReport.query.get(holeID)
-        return result.json()
+        return result.serialize()
 
     def post(self, projectID, holeID):
         args = report_parse.parse_args()
         blast_report = BlastReport(holeID=holeID, depth=args['depth'], report=args['report'], score=args['score'])
         db.session.add(blast_report)
         db.session.commit()
-        return blast_report.json()
+        return blast_report.serialize()
 
     def delete(self, projectID, holeID):
         result = BlastReport.query.get(holeID)
         db.session.delete(result)
         db.session.commit()
-        return result.json()
+        return result.serialize()
 
 
 class Clustering(Resource):
