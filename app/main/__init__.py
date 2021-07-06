@@ -3,6 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .config import config_by_name
 from sqlalchemy import create_engine
+import model.models
 from flask_restful import Api
 
 db = SQLAlchemy()
