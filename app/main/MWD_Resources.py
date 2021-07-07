@@ -1,9 +1,9 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
-from app.main import engine, db
+from . import engine, db
 from plotting import plot_rate, plot_clusters, plot_all_features, encode_all_holes, pd
 import base64
-from ..models import EPIROC, BlastReport, BlastCluster
+from models import EPIROC, BlastReport, BlastCluster
 
 api = Api(app)
 
