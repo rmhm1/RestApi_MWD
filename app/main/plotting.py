@@ -76,11 +76,24 @@ def plot_all_features(df, holeID):
     return temp_dict
 
 
-def plot_clusters(df):
-    fig, ax = plt.subplots()
+def plot_clusters(df, projectID):
+    fig, ax = plt.subplots(figsize=(14, 10))
 
-    df.plot.scatter(x='x', y='y', c='CID', colormap='rainbow', figsize=(14, 10), alpha=.6,
-                    s=10 + df.Depth.map(lambda x: 20 * float(x)), ax=ax)
+    clust = ax.scatter(x=df.x, y=df.y, c=df.CID, cmap='rainbow', alpha=.6,
+                       s=10 + df.Depth.map(lambda x: 20 * float(x)))
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_title('KMeans Clustering of ' + projectID + ' data projected into 2D')
+    # Produce a legend of the colors associated with each cluster
+    legend1 = ax.legend(*clust.legend_elements(),
+                        loc="upper left", title="Cluster ID", markerscale=1.5)
+    ax.add_artist(legend1)
+
+    # Produce a legend of the depth values:
+    kw = dict(prop="sizes", color=clust.cmap(0.7), fmt="{x:.3f}m",
+              func=lambda s: (s - 10) / 20)
+    legend2 = ax.legend(*clust.legend_elements(**kw),
+                        loc="upper right", title="Depth", labelspacing=1.3, borderpad=.6)
     bytes_image = io.BytesIO()
     fig.savefig(bytes_image, format='png')
     bytes_image.seek(0)

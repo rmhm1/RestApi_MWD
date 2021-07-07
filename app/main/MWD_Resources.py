@@ -76,7 +76,7 @@ class Clustering(Resource):
     ## Get method to send the encoded plots of the 2D clustering
     def get(self, projectID):
         data = pd.read_sql('KMeans_WMDS', engine)
-        b64_string = plot_clusters(data)
+        b64_string = plot_clusters(data, projectID)
         response = {'image': b64_string}
         return response
 
