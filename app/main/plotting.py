@@ -33,7 +33,7 @@ def encode_all_holes(df):
         depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
         temp_dict = {'holeID': hole, 'depth': depth}  # Creates a dictionary for each holeID
         fig, ax = plt.subplots()  # Generate the figure and axis before loop for reuseability for efficiency
-        for feature in df.columns[:5]:  # Loop over all relevant features
+        for feature in df.columns[1:6]:  # Loop over all relevant features
             ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
             ax.set_facecolor('black')
             plt.gca().invert_yaxis()
@@ -58,7 +58,7 @@ def plot_all_features(df, holeID):
     depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
     temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
     fig, ax = plt.subplots()  # Generate the figure and axis before loop for reuseability for efficiency
-    for feature in df.columns[:5]:  # Loop over all relevant features
+    for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
         ax.set_facecolor('black')
         plt.gca().invert_yaxis()
@@ -76,7 +76,7 @@ def plot_all_features(df, holeID):
     return temp_dict
 
 
-def plot_clusters(df, projectID):
+def plot_kmeans(df, projectID, k = 10):
     fig, ax = plt.subplots(figsize=(14, 10))
 
     clust = ax.scatter(x=df.x, y=df.y, c=df.CID, cmap='rainbow', alpha=.6,

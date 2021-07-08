@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
-from .plotting import plot_rate, plot_clusters, plot_all_features, encode_all_holes, pd
+from .plotting import plot_rate, plot_kmeans, plot_all_features, encode_all_holes, pd
 import base64
 from .models import EPIROC, BlastReport, BlastCluster
 
@@ -76,7 +76,7 @@ class Clustering(Resource):
     ## Get method to send the encoded plots of the 2D clustering
     def get(self, projectID):
         data = pd.read_sql('KMeans_WMDS', engine)
-        b64_string = plot_clusters(data, projectID)
+        b64_string = plot_kmeans(data, projectID)
         response = {'image': b64_string}
         return response
 
