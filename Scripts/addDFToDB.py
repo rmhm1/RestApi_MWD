@@ -1,4 +1,4 @@
-from app.main import engine
+from app import engine
 import pandas as pd
 
 ## Adds a Pandas DataFrame to the given table of the Database

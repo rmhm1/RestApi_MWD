@@ -1,11 +1,7 @@
 from . import db, engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import *
-
-# Base = declarative_base()
-# metadata = MetaData(bind = engine)
 
 
+# The EPIROC MWD data model
 class EPIROC(db.Model):
     #__table__ = Table('EPIROC', metadata, Column('Time', String, primary_key = True), autoload= True)
     __tablename__ = 'EPIROC'
@@ -20,6 +16,7 @@ class EPIROC(db.Model):
     Time = db.Column(db.String(50))
 
 
+# For holding 2D MWD Data for Clustering/Plotting uses
 class BlastCluster(db.Model):
     __tablename__ = 'BlastCluster'
     holeID = db.Column(db.String(32), primary_key = True)
@@ -39,6 +36,7 @@ class BlastCluster(db.Model):
         return {'holeID': self.holeID, 'depth': self.depth, 'CID': self.CID, 'x': self.x, 'y': self.y}
 
 
+# Reports on blasting given a holeID and depth, with the report and score for the blast
 class BlastReport(db.Model):
     __tablename__ = 'BlastReport'
     holeID = db.Column(db.String(32), primary_key = True)

@@ -1,10 +1,10 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
-from app.Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd
+from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd
 import base64
 from .models import BlastReport
-from app.Resources.Clustering import cluster_data, modify_data
+from .Resources.Clustering import cluster_data, modify_data
 
 
 api = Api(app)
