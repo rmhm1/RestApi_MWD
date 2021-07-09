@@ -84,7 +84,7 @@ class Clustering(Resource):
         args = self.reqparse.parse_args()
 
         mwd_data = pd.read_sql(projectID, engine)
-        data = modify_data(mwd_data, data_type = args['data_type'])
+        data = modify_data(mwd_data.iloc[:, 1:6], data_type = args['data_type'])
         cluster_labels = cluster_data(data, model = args['model'], k = args['k'])
         if args['data_type'] == 'weighted':
             data2D = pd.read_sql('KMeans_WMDS', engine)
@@ -112,7 +112,7 @@ class ClusterByBlastEntry(Resource):
         # If we are doing weighted clustering, multiply the weights to the designated columns. Also
         # Normalize the data via StandardScalar()
 
-        data = modify_data(mwd_df, args['data_type'])
+        data = modify_data(mwd_df.iloc[:, 1:6], args['data_type'])
 
         cluster_labels = cluster_data(data, model=args['model'], k=args['k'])
         specific_hole = mwd_df[mwd_df.holeID == args['holeID']]
