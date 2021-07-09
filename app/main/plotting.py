@@ -76,22 +76,25 @@ def plot_all_features(df, holeID):
     return temp_dict
 
 
-def plot_kmeans(df, projectID, k = 10):
+def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA'):
+    axis_labels = ['PC1', 'PC2'] if (mode == 'PCA') else ['x', 'y']
+
     fig, ax = plt.subplots(figsize=(14, 10))
 
-    clust = ax.scatter(x=df.x, y=df.y, c=df.CID, cmap='rainbow', alpha=.6,
-                       s=10 + df.Depth.map(lambda x: 20 * float(x)))
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
-    ax.set_title('KMeans Clustering of ' + projectID + ' data projected into 2D')
+    clust = ax.scatter(x=data2D[axis_labels[0]], y=data2D[axis_labels[1]], c=labels, cmap='rainbow', alpha=.6,
+                       s=10 + data2D.Depth.map(lambda x: 15 * float(x)))
+
+    ax.set_xlabel(axis_labels[0])
+    ax.set_ylabel(axis_labels[1])
+    ax.set_title(model + ' Clustering of ' + projectID + ' data projected into 2D')
     # Produce a legend of the colors associated with each cluster
     legend1 = ax.legend(*clust.legend_elements(),
-                        loc="upper left", title="Cluster ID", markerscale=1.5)
+                        loc="upper left", title="Cluster Number", markerscale=1.5)
     ax.add_artist(legend1)
 
     # Produce a legend of the depth values:
     kw = dict(prop="sizes", color=clust.cmap(0.7), fmt="{x:.3f}m",
-              func=lambda s: (s - 10) / 20)
+              func=lambda s: (s - 10) / 15)
     legend2 = ax.legend(*clust.legend_elements(**kw),
                         loc="upper right", title="Depth", labelspacing=1.3, borderpad=.6)
     bytes_image = io.BytesIO()

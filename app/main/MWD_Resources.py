@@ -1,9 +1,10 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
-from .plotting import plot_rate, plot_kmeans, plot_all_features, encode_all_holes, pd
+from .plotting import plot_rate, plot_cluster, plot_all_features, encode_all_holes, pd
 import base64
 from .models import EPIROC, BlastReport, BlastCluster
+from Scripts.Clustering import cluster_data, modify_data
 
 api = Api(app)
 
@@ -45,21 +46,20 @@ class PlotAllHoles(Resource):
         return json.dumps(dicts)
 
 
-# Request Parser:
-report_parse = reqparse.RequestParser()
-# report_parse.add_argument('holeID', type = str, help = 'ID of Hole', required = True)
-report_parse.add_argument('depth', type = float, help = 'Depth of the blast in the hole', required = True)
-report_parse.add_argument('report', type = str, help = 'Report of Blast', required = True)
-report_parse.add_argument('score', type = int, help = 'Rating of the Blast', required = True)
-
-
 class Report(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        # report_parse.add_argument('holeID', type = str, help = 'ID of Hole', required = True)
+        self.reqparse.add_argument('depth', type=float, help='Depth of the blast in the hole', required=True)
+        self.reqparse.add_argument('report', type=str, help='Report of Blast', required=True)
+        self.reqparse.add_argument('score', type=int, help='Rating of the Blast', required=True)
+
     def get(self, projectID, holeID):
         result = BlastReport.query.get(holeID)
         return result.serialize()
 
     def post(self, projectID, holeID):
-        args = report_parse.parse_args()
+        args = self.reqparse.parse_args()
         blast_report = BlastReport(holeID=holeID, depth=args['depth'], report=args['report'], score=args['score'])
         db.session.add(blast_report)
         db.session.commit()
@@ -73,37 +73,62 @@ class Report(Resource):
 
 
 class Clustering(Resource):
-    ## Get method to send the encoded plots of the 2D clustering
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('data_type', type=str, required=False, default='PCA')
+        self.reqparse.add_argument('k', type=int, required=False, default=5)
+        self.reqparse.add_argument('model', type=str, required=False, default='agglom')
+
+    # Get method to send the encoded plots of the 2D clustering
     def get(self, projectID):
-        data = pd.read_sql('KMeans_WMDS', engine)
-        b64_string = plot_kmeans(data, projectID)
+        args = self.reqparse.parse_args()
+
+        mwd_data = pd.read_sql(projectID, engine)
+        data = modify_data(mwd_data, data_type = args['data_type'])
+        cluster_labels = cluster_data(data, model = args['model'], k = args['k'])
+        if args['data_type'] == 'weighted':
+            data2D = pd.read_sql('KMeans_WMDS', engine)
+            b64_string = plot_cluster(data2D, projectID, cluster_labels, args['model'], args['mode'])
+        else:
+            b64_string = plot_cluster(data, projectID, cluster_labels, args['model'], args['mode'])
+
         response = {'image': b64_string}
         return response
 
 
 # Used to get entries in the same cluster as the blast
 class ClusterByBlastEntry(Resource):
-    def get(self, projectID, depth, holeID):
-        mwd_df = pd.read_sql(projectID, engine)
-        cluster_df = pd.read_sql('KMeans_WMDS', engine)
-        specific_hole = cluster_df[cluster_df.holeID == holeID]
-        idx_depth = specific_hole.Depth.sub(depth).abs().idxmin()
-        cluster = specific_hole.CID.iloc[idx_depth]
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('depth', type=float, required=True)
+        self.reqparse.add_argument('holeID', type=str, required=True)
+        self.reqparse.add_argument('data_type', type=str, required=False, default='PCA')
+        self.reqparse.add_argument('k', type=int, required=False, default=5)
+        self.reqparse.add_argument('model', type=str, required=False, default='agglom')
 
-        same_cluster = mwd_df[cluster_df.CID == cluster]
+    def get(self, projectID):
+        mwd_df = pd.read_sql(projectID, engine)
+        args = self.reqparse.parse_args()  # Request arguments
+        # If we are doing weighted clustering, multiply the weights to the designated columns. Also
+        # Normalize the data via StandardScalar()
+
+        data = modify_data(mwd_df, args['data_type'])
+
+        cluster_labels = cluster_data(data, model=args['model'], k=args['k'])
+        specific_hole = mwd_df[mwd_df.holeID == args['holeID']]
+        idx_depth = specific_hole.Depth.sub(args['depth']).abs().idxmin()
+        cluster = cluster_labels[idx_depth]
+
+        same_cluster = mwd_df[cluster_labels == cluster]
 
         result = same_cluster.to_json(orient='index')
         return result
 
+
 # Endpoints
-api.add_resource(HolePlots, '/Plots/<holeID>/<feature>')
-api.add_resource(HoleIDByProject, '/GetHoleIDs/<string:projectID>')
+api.add_resource(HolePlots, '/Plots/<string:holeID>/<string:feature>')
+api.add_resource(HoleIDByProject, '/<string:projectID>/GetHoleIDs')
 api.add_resource(PlotAllHoles, '/<string:projectID>/AllPlots')
 api.add_resource(Report, '/<string:projectID>/<string:holeID>/BlastReport')
 api.add_resource(Clustering, '/<string:projectID>/Cluster')
-api.add_resource(ClusterByBlastEntry, '/SharedCluster/<string:projectID>/<string:holeID>/<float:depth>')
-
-
-
-
-
+api.add_resource(ClusterByBlastEntry, '/<string:projectID>/SharedCluster')
