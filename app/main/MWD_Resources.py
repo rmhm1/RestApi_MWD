@@ -90,7 +90,7 @@ class Clustering(Resource):
             data2D = pd.read_sql('KMeans_WMDS', engine)
             b64_string = plot_cluster(data2D, projectID, cluster_labels, args['model'], args['mode'])
         else:
-            b64_string = plot_cluster(data, projectID, cluster_labels, args['model'], args['mode'])
+            b64_string = plot_cluster(data, projectID, cluster_labels, args['model'], args['data_type'])
 
         response = {'image': b64_string}
         return response
