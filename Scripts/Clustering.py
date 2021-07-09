@@ -37,12 +37,12 @@ def cluster_data(data, model = 'agglom', k = 5, linkage = 'complete'):
         return spec_labels
 
 def modify_data(data, data_type):
-    data = StandardScaler().fit_transform(data)
+    data = pd.DataFrame(StandardScaler().fit_transform(data), columns = data.columns)
     if data_type == 'weighted':
         # Weight values will be tweaked as more features are added
         weights = pd.Series([1.15, 1, 1, 1, 1.25], index=data.columns)
         data = data * (weights / weights.sum())
     elif data_type == 'PCA':
         pca_model = PCA(n_components=3)
-        data = pca_model.fit_transform(data)
+        data = pd.DataFrame(pca_model.fit_transform(data), columns = ['PC1', 'PC2', 'PC3'])
     return data
