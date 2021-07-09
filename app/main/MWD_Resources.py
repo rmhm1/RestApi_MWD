@@ -1,10 +1,11 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
-from .plotting import plot_rate, plot_cluster, plot_all_features, encode_all_holes, pd
+from app.Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd
 import base64
-from .models import EPIROC, BlastReport, BlastCluster
-from Scripts.Clustering import cluster_data, modify_data
+from .models import BlastReport
+from app.Resources.Clustering import cluster_data, modify_data
+
 
 api = Api(app)
 
@@ -76,7 +77,7 @@ class Clustering(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('data_type', type=str, required=False, default='PCA')
-        self.reqparse.add_argument('k', type=int, required=False, default=5)
+        self.reqparse.add_argument('k', type=int, required=False, default=4)
         self.reqparse.add_argument('model', type=str, required=False, default='agglom')
 
     # Get method to send the encoded plots of the 2D clustering
@@ -104,7 +105,7 @@ class ClusterByBlastEntry(Resource):
         self.reqparse.add_argument('depth', type=float, required=True)
         self.reqparse.add_argument('holeID', type=str, required=True)
         self.reqparse.add_argument('data_type', type=str, required=False, default='PCA')
-        self.reqparse.add_argument('k', type=int, required=False, default=5)
+        self.reqparse.add_argument('k', type=int, required=False, default=4)
         self.reqparse.add_argument('model', type=str, required=False, default='agglom')
 
     def get(self, projectID):
