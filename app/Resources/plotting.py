@@ -64,7 +64,7 @@ def plot_all_features(df, holeID):
         plt.gca().invert_yaxis()
         plt.ylabel('Depth')
         plt.xlabel(feature)
-        plt.title(r"$\bf{" + feature + "}$")
+        plt.title(r"$\bf{" + holeID + ": " + feature + "}$")
         bytes_image = io.BytesIO()
         fig.savefig(bytes_image, format='png')
         bytes_image.seek(0)

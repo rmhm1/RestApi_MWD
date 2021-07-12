@@ -37,6 +37,23 @@ def cluster_data(data, model = 'agglom', k = 5, linkage = 'complete'):
         return spec_labels
 
 def modify_data(data, data_type):
+    """
+    Normalizes the data, Adds weights to the data if wanted for weighted clustering/WMDS, or computes
+    the first 3 Principal Components if PCA is wanted for Clustering/Dimension Reduction.
+
+    Parameters
+    ----------
+    data: Pandas DataFrame
+        The data to be normalized, weighted, or PCA computed upon.
+    data_type: String
+         A String stating how to modify the data. If 'weighted' is provided, weights are added to the
+         features of the normalized data. If 'PCA' is provided, PCA is performed upon the
+         normalized data.
+
+    Returns
+    -------
+    A Pandas DataFrame with the modified data.
+    """
     data = pd.DataFrame(StandardScaler().fit_transform(data), columns = data.columns)
     if data_type == 'weighted':
         # Weight values will be tweaked as more features are added
