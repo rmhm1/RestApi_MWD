@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
-from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd
+from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd, plot_all_features
 import base64
 from .models import BlastReport
 from .Resources.Clustering import cluster_data, modify_data
@@ -11,8 +11,8 @@ api = Api(app)
 
 
 class HolePlots(Resource):
-    def get(self, feature, holeID):
-        data = pd.read_sql('EPIROC', engine)
+    def get(self, feature, holeID, projectID):
+        data = pd.read_sql(projectID, engine)
 
         if feature not in data.columns:
             response = {
@@ -47,27 +47,39 @@ class PlotAllHoles(Resource):
         return json.dumps(dicts)
 
 
+# Plots all of the features of a specific holeID
+class PlotAllFeatures(Resource):
+    def get(self, projectID, holeID):
+        data = pd.read_sql(projectID, engine)
+        dict = plot_all_features(data, holeID)
+
+        return dict
+
+
 class Report(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        # report_parse.add_argument('holeID', type = str, help = 'ID of Hole', required = True)
+        self.reqparse.add_argument('holeID', type = str, help = 'ID of Hole', required = True)
         self.reqparse.add_argument('depth', type=float, help='Depth of the blast in the hole', required=True)
         self.reqparse.add_argument('report', type=str, help='Report of Blast', required=True)
         self.reqparse.add_argument('score', type=int, help='Rating of the Blast', required=True)
 
-    def get(self, projectID, holeID):
-        result = BlastReport.query.get(holeID)
+    def get(self, projectID):
+        args = self.reqparse.parse_args()
+        result = BlastReport.query.get((args['holeID'], args['depth']))
         return result.serialize()
 
-    def post(self, projectID, holeID):
+    def post(self, projectID):
         args = self.reqparse.parse_args()
-        blast_report = BlastReport(holeID=holeID, depth=args['depth'], report=args['report'], score=args['score'])
+        blast_report = BlastReport(holeID=args['holeID'], depth=args['depth'],
+                                   report=args['report'], score=args['score'])
         db.session.add(blast_report)
         db.session.commit()
         return blast_report.serialize()
 
-    def delete(self, projectID, holeID):
-        result = BlastReport.query.get(holeID)
+    def delete(self, projectID):
+        args = self.reqparse.parse_args()
+        result = BlastReport.query.get((args['holeID'], args['depth']))
         db.session.delete(result)
         db.session.commit()
         return result.serialize()
@@ -128,9 +140,12 @@ class ClusterByBlastEntry(Resource):
 
 
 # Endpoints
-api.add_resource(HolePlots, '/Plots/<string:holeID>/<string:feature>')
+# api.add_resource(HolePlots, '/Plots/<string:holeID>/<string:feature>')
+api.add_resource(HolePlots, '/Plots/<string:projectID>')
 api.add_resource(HoleIDByProject, '/<string:projectID>/GetHoleIDs')
+api.add_resource(PlotAllFeatures, '/<string:projectID>/<string:holeID>/AllFeatures')
 api.add_resource(PlotAllHoles, '/<string:projectID>/AllPlots')
-api.add_resource(Report, '/<string:projectID>/<string:holeID>/BlastReport')
+api.add_resource(Report, '/<string:projectID>/BlastReport')
+# api.add_resource(Report, '/<string:projectID>/<string:holeID>/BlastReport')
 api.add_resource(Clustering, '/<string:projectID>/Cluster')
 api.add_resource(ClusterByBlastEntry, '/<string:projectID>/SharedCluster')
