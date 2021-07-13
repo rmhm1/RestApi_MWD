@@ -66,7 +66,7 @@ class Report(Resource):
 
     def get(self, projectID):
         args = self.reqparse.parse_args()
-        result = BlastReport.query.get((args['holeID'], args['depth']))
+        result = BlastReport.query.get(args['holeID'])
         return result.serialize()
 
     def post(self, projectID):
@@ -79,7 +79,7 @@ class Report(Resource):
 
     def delete(self, projectID):
         args = self.reqparse.parse_args()
-        result = BlastReport.query.get((args['holeID'], args['depth']))
+        result = BlastReport.query.get(args['holeID'])
         db.session.delete(result)
         db.session.commit()
         return result.serialize()
