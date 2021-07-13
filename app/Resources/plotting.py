@@ -81,12 +81,14 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
 
     fig, ax = plt.subplots(figsize=(14, 10))
 
+    model_title = 'Agglomerative' if model == 'agglom' else 'KMeans' if model =='kmeans' else 'Spectral'
+
     clust = ax.scatter(x=data2D[axis_labels[0]], y=data2D[axis_labels[1]], c=labels, cmap='rainbow', alpha=.6,
                        s=10 + data2D.Depth.map(lambda x: 15 * float(x)))
 
     ax.set_xlabel(axis_labels[0])
     ax.set_ylabel(axis_labels[1])
-    ax.set_title(model + ' Clustering of ' + projectID + ' data projected into 2D')
+    ax.set_title(model_title + ' Clustering of ' + projectID + ' data projected into 2D')
     # Produce a legend of the colors associated with each cluster
     legend1 = ax.legend(*clust.legend_elements(),
                         loc="upper left", title="Cluster Number", markerscale=1.5)
