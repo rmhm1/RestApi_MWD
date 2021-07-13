@@ -60,7 +60,7 @@ class Report(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('holeID', type = str, help = 'ID of Hole', required = True)
-        self.reqparse.add_argument('depth', type=float, help='Depth of the blast in the hole', required=True)
+        self.reqparse.add_argument('depth', type=float, help='Depth of the blast in the hole', required=False)
         self.reqparse.add_argument('report', type=str, help='Report of Blast', required=False)
         self.reqparse.add_argument('score', type=int, help='Rating of the Blast', required=False)
 
