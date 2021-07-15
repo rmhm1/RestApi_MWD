@@ -34,7 +34,7 @@ class HoleIDByProject(Resource):
     def get(self, projectID):
         data = pd.read_sql(projectID, engine)
         dicts = []
-        for hole in set(data.holeID):
+        for hole in data.holeID.unique():
             dicts.append({'holeID': hole})
         return dicts
 
