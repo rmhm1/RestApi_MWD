@@ -140,12 +140,12 @@ class ClusterByBlastEntry(Resource):
 
 
 # Endpoints
-# api.add_resource(HolePlots, '/Plots/<string:holeID>/<string:feature>')
-api.add_resource(HolePlots, '/Plots/<string:projectID>')
+api.add_resource(HolePlots, '/Plots/<string:holeID>/<string:feature>')
+# api.add_resource(HolePlots, '/Plots/<string:projectID>')
 api.add_resource(HoleIDByProject, '/<string:projectID>/GetHoleIDs')
 api.add_resource(PlotAllFeatures, '/<string:projectID>/<string:holeID>/AllFeatures')
 api.add_resource(PlotAllHoles, '/<string:projectID>/AllPlots')
 api.add_resource(Report, '/<string:projectID>/BlastReport')
 # api.add_resource(Report, '/<string:projectID>/<string:holeID>/BlastReport')
 api.add_resource(Clustering, '/<string:projectID>/Cluster')
-api.add_resource(ClusterByBlastEntry, '/<string:projectID>/SharedCluster')
+api.add_resource(ClusterByBlastEntry, '/<string:projectID>/ClusterByEntry')
