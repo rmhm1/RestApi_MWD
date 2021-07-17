@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def plot_rate(holeID, df, feature):
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize = (7, 12))
     hole = df[df.holeID == holeID]
     X = hole[feature].values
     Y = hole.Depth
@@ -57,7 +57,7 @@ def plot_all_features(df, holeID):
     specific_df = df[df.holeID == holeID]  # Grabs the entries of the specific holeID
     depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
     temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
-    fig, ax = plt.subplots()  # Generate the figure and axis before loop for reuseability for efficiency
+    fig, ax = plt.subplots(figsize = (7, 12))  # Generate the figure and axis before loop for reuseability for efficiency
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
         ax.set_facecolor('black')
