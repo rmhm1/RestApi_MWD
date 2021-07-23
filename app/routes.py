@@ -57,9 +57,9 @@ class PlotAllFeatures(Resource):
         data = pd.read_sql('MWD', engine)
         data = data[data.projectID == projectID]
 
-        dict = plot_all_features(data, holeID)
+        dicts = plot_all_features(data, holeID)
 
-        return dict
+        return dicts
 
 
 class Report(Resource):
