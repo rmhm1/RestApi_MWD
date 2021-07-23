@@ -14,14 +14,15 @@ class MWD(db.Model):
     holeID = db.Column(db.String(32))
     depth = db.Column(db.Float)
     Time = db.Column(db.String(50))
+    projectID = db.Column(db.String(50), primary_key=True)
 
 
-class Montana(MWD, db.Model):
-    __tablename__ = 'Montana'
+# class Montana(MWD, db.Model):
+#   __tablename__ = 'Montana'
 
 
-class PortInland(MWD, db.Model):
-    __tablename__ = 'PortInland'
+# class PortInland(MWD, db.Model):
+#   __tablename__ = 'PortInland'
 
 
 # For holding 2D MWD Data for Clustering/Plotting uses

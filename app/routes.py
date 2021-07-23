@@ -12,7 +12,8 @@ api = Api(app)
 
 class HolePlots(Resource):
     def get(self, feature, holeID, projectID):
-        data = pd.read_sql(projectID, engine)
+        data = pd.read_sql('MWD', engine)
+        data = data[data.projectID == projectID]
 
         if feature not in data.columns:
             response = {
@@ -32,7 +33,9 @@ class HolePlots(Resource):
 
 class HoleIDByProject(Resource):
     def get(self, projectID):
-        data = pd.read_sql(projectID, engine)
+        data = pd.read_sql('MWD', engine)
+        data = data[data.projectID == projectID]
+
         dicts = []
         for hole in data.holeID.unique():
             dicts.append({'holeID': hole})
@@ -41,7 +44,8 @@ class HoleIDByProject(Resource):
 
 class PlotAllHoles(Resource):
     def get(self, projectID):
-        data = pd.read_sql(projectID, engine)
+        data = pd.read_sql('MWD', engine)
+        data = data[data.projectID == projectID]
         dicts = encode_all_holes(data)
 
         return json.dumps(dicts)
@@ -50,7 +54,9 @@ class PlotAllHoles(Resource):
 # Plots all of the features of a specific holeID
 class PlotAllFeatures(Resource):
     def get(self, projectID, holeID):
-        data = pd.read_sql(projectID, engine)
+        data = pd.read_sql('MWD', engine)
+        data = data[data.projectID == projectID]
+
         dict = plot_all_features(data, holeID)
 
         return dict
@@ -96,7 +102,9 @@ class Clustering(Resource):
     def get(self, projectID):
         args = self.reqparse.parse_args()
 
-        mwd_data = pd.read_sql(projectID, engine)
+        mwd_data = pd.read_sql('MWD', engine)
+        mwd_data = mwd_data[mwd_data.projectID == projectID]
+
         data = modify_data(mwd_data.iloc[:, 1:6], data_type = args['data_type'])
         cluster_labels = cluster_data(data, model = args['model'], k = args['k'])
         if args['data_type'] == 'weighted':
@@ -122,6 +130,7 @@ class ClusterByBlastEntry(Resource):
 
     def get(self, projectID):
         mwd_df = pd.read_sql(projectID, engine)
+        mwd_df = mwd_df[mwd_df.projectID == projectID]
         args = self.reqparse.parse_args()  # Request arguments
         # If we are doing weighted clustering, multiply the weights to the designated columns. Also
         # Normalize the data via StandardScalar()
