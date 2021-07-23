@@ -2,9 +2,9 @@ from . import db, engine
 
 
 # The EPIROC MWD data model
-class EPIROC(db.Model):
+class MWD(db.Model):
     #__table__ = Table('EPIROC', metadata, Column('Time', String, primary_key = True), autoload= True)
-    __tablename__ = 'EPIROC'
+    __tablename__ = 'MWD'
     index = db.Column(db.Integer, primary_key=True)
     PenetrRate = db.Column(db.Float)
     PercPressure = db.Column(db.Float)
@@ -14,6 +14,14 @@ class EPIROC(db.Model):
     holeID = db.Column(db.String(32))
     depth = db.Column(db.Float)
     Time = db.Column(db.String(50))
+
+
+class Montana(MWD, db.Model):
+    __tablename__ = 'Montana'
+
+
+class PortInland(MWD, db.Model):
+    __tablename__ = 'PortInland'
 
 
 # For holding 2D MWD Data for Clustering/Plotting uses

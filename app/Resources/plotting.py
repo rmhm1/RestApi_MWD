@@ -5,7 +5,7 @@ import pandas as pd
 
 
 def plot_rate(holeID, df, feature):
-    fig, ax = plt.subplots(figsize = (7, 12))
+    fig, ax = plt.subplots(figsize = (5, 12))
     hole = df[df.holeID == holeID]
     X = hole[feature].values
     Y = hole.Depth
@@ -32,7 +32,7 @@ def encode_all_holes(df):
         specific_df = df[df.holeID == hole]  # Grabs the entries of the specific holeID
         depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
         temp_dict = {'holeID': hole, 'depth': depth}  # Creates a dictionary for each holeID
-        fig, ax = plt.subplots()  # Generate the figure and axis before loop for reuseability for efficiency
+        fig, ax = plt.subplots(figsize = (5, 12))  # Generate the figure and axis before loop for reuseability for efficiency
         for feature in df.columns[1:6]:  # Loop over all relevant features
             ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
             ax.set_facecolor('black')
@@ -57,7 +57,7 @@ def plot_all_features(df, holeID):
     specific_df = df[df.holeID == holeID]  # Grabs the entries of the specific holeID
     depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
     temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
-    fig, ax = plt.subplots(figsize = (7, 12))  # Generate the figure and axis before loop for reuseability for efficiency
+    fig, ax = plt.subplots(figsize = (5, 12))  # Generate the figure and axis before loop for reuseability for efficiency
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
         ax.set_facecolor('black')
@@ -65,6 +65,7 @@ def plot_all_features(df, holeID):
         plt.ylabel('Depth')
         plt.xlabel(feature)
         plt.title(r"$\bf{" + holeID + ": " + feature + "}$")
+        plt.grid()
         bytes_image = io.BytesIO()
         fig.savefig(bytes_image, format='png')
         bytes_image.seek(0)
