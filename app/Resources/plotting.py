@@ -66,7 +66,7 @@ def plot_all_features(df, holeID):
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
 
-        plt.xlim([0, 4.5])
+        #plt.xlim([0, 4.5])
         ax.set_facecolor('grey')
         plt.gca().invert_yaxis()
         plt.ylabel('Depth')
