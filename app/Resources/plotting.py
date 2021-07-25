@@ -66,12 +66,6 @@ def plot_all_features(df, holeID):
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
 
-        if feature == 'PenetrRate':
-            ax.axvline(hard, linestyle='--', color='purple')
-            plt.text(x=hard + .08, y=specific_df.Depth.max() / 2, rotation=270, s='Hard Rock', color='purple')
-            ax.axvline(soft, linestyle='--', color='green')
-            plt.text(x=soft - .1, y=specific_df.Depth.max() / 2, rotation=90, s='Soft Rock', color='green')
-
         plt.xlim([0, 4.5])
         ax.set_facecolor('grey')
         plt.gca().invert_yaxis()
