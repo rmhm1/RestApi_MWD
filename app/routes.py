@@ -1,7 +1,7 @@
 from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
-from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd, plot_all_features
+from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd, plot_all_features, hardness_bar_plot
 import base64
 from .models import BlastReport
 from .Resources.Clustering import cluster_data, modify_data
@@ -129,7 +129,7 @@ class ClusterByBlastEntry(Resource):
         self.reqparse.add_argument('model', type=str, required=False, default='agglom')
 
     def get(self, projectID):
-        mwd_df = pd.read_sql(projectID, engine)
+        mwd_df = pd.read_sql('MWD', engine)
         mwd_df = mwd_df[mwd_df.projectID == projectID]
         args = self.reqparse.parse_args()  # Request arguments
         # If we are doing weighted clustering, multiply the weights to the designated columns. Also
@@ -146,6 +146,17 @@ class ClusterByBlastEntry(Resource):
 
         result = same_cluster.to_json(orient='index')
         return result
+
+
+class HardnessBar(Resource):
+    def get(self, projectID, holeID):
+        df = pd.read_sql('MWD', engine)
+        df = df[df.projectID == projectID]
+        b64_string = hardness_bar_plot(df, holeID, projectID)
+
+        response = {'image': b64_string}
+        return response
+
 
 
 # Endpoints

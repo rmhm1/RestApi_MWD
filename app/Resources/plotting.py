@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import io
 import base64
 import pandas as pd
+import numpy as np
+from matplotlib.patches import Patch
 
 
 def plot_rate(holeID, df, feature):
@@ -100,6 +102,46 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
               func=lambda s: (s - 10) / 15)
     legend2 = ax.legend(*clust.legend_elements(**kw),
                         loc="upper right", title="Depth", labelspacing=1.3, borderpad=.6)
+    bytes_image = io.BytesIO()
+    fig.savefig(bytes_image, format='png')
+    bytes_image.seek(0)
+    img_base64 = base64.b64encode(bytes_image.read())
+    return img_base64.decode()
+
+
+def hardness_bar_plot(df, holeID, projectID):
+    step = 1 if projectID == 'Montana' else 3 # Sets the step size for binning rows together (Not needed for montana)
+    hard = 1.8 # Sets boundary for hard rock
+    soft = .8 # Sets boundary for soft rock
+    colors = {'hard': 'green', 'medium': 'yellow', 'soft': 'red'} # Sets colors for groups
+
+    hole = df[df.holeID == holeID] # Grabs the entries of the specific holeID
+
+    fig, ax = plt.subplots(figsize=(4, 12))
+    plt.ylim([hole.Depth.min(), hole.Depth.max()])
+    ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
+    plt.gca().invert_yaxis()
+
+    binned = hole.groupby(hole.index // step).PenetrRate.mean()
+    binned = pd.DataFrame(binned, columns=['PenetrRate'])
+    binned['Hardness'] = binned.PenetrRate.map(
+        lambda rate: 'soft' if rate <= soft else 'hard' if rate >= hard else 'medium')
+    depth_per = (hole.Depth.max() - hole.Depth.min()) / len(binned)
+
+    coord = hole.Depth.min()
+    for entry in binned.iterrows():
+        rectangle = plt.Rectangle((0, coord), 1, depth_per, fc=colors[entry[1][-1]], linewidth=0)
+        ax.add_patch(rectangle)
+        coord += depth_per
+
+    legend_elements = [Patch(facecolor='green', label='hard'),
+                       Patch(facecolor='yellow', label='medium'),
+                       Patch(facecolor='red', label='soft')]
+
+    ax.axes.xaxis.set_ticks([])
+    plt.title(holeID + ' Hardness', weight = 'bold')
+    plt.legend(handles=legend_elements, bbox_to_anchor=[1, 1.008])
+
     bytes_image = io.BytesIO()
     fig.savefig(bytes_image, format='png')
     bytes_image.seek(0)
