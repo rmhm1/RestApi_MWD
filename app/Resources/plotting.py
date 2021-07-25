@@ -56,13 +56,24 @@ def encode_all_holes(df):
 
 
 def plot_all_features(df, holeID):
+    soft = .8
+    hard = 1.8
+
     specific_df = df[df.holeID == holeID]  # Grabs the entries of the specific holeID
     depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
     temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
     fig, ax = plt.subplots(figsize = (5, 12))  # Generate the figure and axis before loop for reuseability for efficiency
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color='aqua')
-        ax.set_facecolor('black')
+
+        if feature == 'PenetrRate':
+            ax.axvline(hard, linestyle='--', color='purple')
+            plt.text(x=hard + .08, y=specific_df.Depth.max() / 2, rotation=270, s='Hard Rock', color='purple')
+            ax.axvline(soft, linestyle='--', color='green')
+            plt.text(x=soft - .1, y=specific_df.Depth.max() / 2, rotation=90, s='Soft Rock', color='green')
+
+        plt.xlim([0, 4.5])
+        ax.set_facecolor('grey')
         plt.gca().invert_yaxis()
         plt.ylabel('Depth')
         plt.xlabel(feature)
