@@ -58,6 +58,9 @@ class PlotAllFeatures(Resource):
         data = data[data.projectID == projectID]
 
         dicts = plot_all_features(data, holeID)
+        bar_chart = hardness_bar_plot(data, holeID, projectID)
+
+        dicts['hardness'] = bar_chart
 
         return dicts
 
