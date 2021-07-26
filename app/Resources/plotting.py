@@ -126,6 +126,7 @@ def hardness_bar_plot(df, holeID, projectID):
     plt.ylim([hole.Depth.min(), hole.Depth.max()])
     ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
     plt.gca().invert_yaxis()
+    plt.ylabel('Depth (meters)')
 
     binned = hole.groupby(hole.index // step).PenetrRate.mean()
     binned = pd.DataFrame(binned, columns=['PenetrRate'])
