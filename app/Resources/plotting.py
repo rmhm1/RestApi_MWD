@@ -55,6 +55,52 @@ def encode_all_holes(df):
     return list_of_dicts
 
 
+def all_features_update(df, holeID):
+    colors = ['aqua', 'salmon', 'darkviolet', 'palegreen', 'navajowhite']
+    color_dict = dict(zip(df.columns[1:6], colors))
+    xlim_dict = dict(zip(df.columns[1:6], [[0, 4.5], [9.5, 25], [35, 60], [40, 75], [0, 4]]))
+
+    specific_df = df[df.holeID == holeID]  # Grabs the entries of the specific holeID
+    depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
+    temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
+    fig, ax = plt.subplots(figsize=(5, 12))  # Generate the figure and axis before loop for reuseability for efficiency
+
+    # Plot The First Feature:
+    line, = ax.plot(specific_df[df.columns[1]].values, specific_df.Depth, color=color_dict[df.columns[1]])
+    ax.set_facecolor('grey')
+    ax.axes.yaxis.set_ticks(range(int(np.floor(specific_df.Depth.min())),
+                                  int(np.ceil(specific_df.Depth.max())) + 1))
+    plt.ylim([0, int(np.ceil(specific_df.Depth.max()))])
+    plt.xlim(xlim_dict[df.columns[1]])
+    plt.gca().invert_yaxis()
+    plt.ylabel('Depth')
+    plt.xlabel(df.columns[1])
+    plt.title(r"$\bf{" + holeID + ": " + df.columns[1] + "}$")
+    plt.grid()
+    bytes_image = io.BytesIO()
+    fig.savefig(bytes_image, format='png', bbox_inches='tight')
+    bytes_image.seek(0)
+    img_base64 = base64.b64encode(bytes_image.read())
+    temp_dict[df.columns[1]] = img_base64.decode()
+
+    for feature in df.columns[2:6]:
+        plt.xlim(xlim_dict[feature])
+        line.set_xdata(specific_df[feature].values)
+        line.set_color(color_dict[feature])
+        plt.xlabel(feature)
+        plt.title(r"$\bf{" + holeID + ": " + feature + "}$")
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+
+        bytes_image = io.BytesIO()
+        fig.savefig(bytes_image, format='png', bbox_inches='tight')
+        bytes_image.seek(0)
+        img_base64 = base64.b64encode(bytes_image.read())
+        temp_dict[feature] = img_base64.decode()
+    plt.close()
+    return temp_dict
+
+
 def plot_all_features(df, holeID):
     soft = .8
     hard = 1.8
@@ -89,6 +135,7 @@ def plot_all_features(df, holeID):
         ## Encode the bytes image to base64, and convert from bytes to string to return
         img_base64 = base64.b64encode(bytes_image.read())
         temp_dict[feature] = img_base64.decode()
+    plt.close(fig)
     return temp_dict
 
 
