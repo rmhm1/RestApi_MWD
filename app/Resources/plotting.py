@@ -74,6 +74,8 @@ def plot_all_features(df, holeID):
         ax.set_facecolor('grey')
         ax.axes.yaxis.set_ticks(range(int(np.floor(specific_df.Depth.min())),
                                       int(np.ceil(specific_df.Depth.max())) + 1))
+        plt.ylim([0, int(np.ceil(specific_df.Depth.max()))])
+
         plt.gca().invert_yaxis()
         plt.ylabel('Depth')
         plt.xlabel(feature)
