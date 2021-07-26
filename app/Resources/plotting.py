@@ -67,14 +67,13 @@ def plot_all_features(df, holeID):
     temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
     fig, ax = plt.subplots(figsize = (5, 12))  # Generate the figure and axis before loop for reuseability for efficiency
 
-    ax.axes.yaxis.set_ticks(range(int(np.floor(specific_df.Depth.min())),
-                                  int(np.floor(specific_df.Depth.max())) + 1))
-
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color=color_dict[feature])
 
         #plt.xlim([0, 4.5])
         ax.set_facecolor('grey')
+        ax.axes.yaxis.set_ticks(range(int(np.floor(specific_df.Depth.min())),
+                                      int(np.floor(specific_df.Depth.max())) + 1))
         plt.gca().invert_yaxis()
         plt.ylabel('Depth')
         plt.xlabel(feature)
