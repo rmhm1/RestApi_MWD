@@ -142,7 +142,7 @@ def plot_all_features(df, holeID):
 def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA'):
     axis_labels = ['PC1', 'PC2'] if (mode == 'PCA' or mode == 'unweighted') else ['x', 'y']
 
-    fig, ax = plt.subplots(figsize=(15, 12), rasterized = True)
+    fig, ax = plt.subplots(figsize=(15, 12))
 
     model_title = 'Agglomerative' if model == 'agglom' else 'KMeans' if model =='kmeans' else 'Spectral'
 
@@ -163,7 +163,7 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
     legend2 = ax.legend(*clust.legend_elements(**kw),
                         loc="upper right", title="Depth", labelspacing=1.3, borderpad=.6)
     bytes_image = io.BytesIO()
-    fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
+    fig.savefig(bytes_image, format='png', bbox_inches = 'tight', rasterized = True)
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
     return img_base64.decode()
