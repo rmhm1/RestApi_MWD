@@ -128,7 +128,7 @@ def hardness_bar_plot(df, holeID, projectID):
 
     hole = df[df.holeID == holeID] # Grabs the entries of the specific holeID
 
-    fig, ax = plt.subplots(figsize=(3, 12))
+    fig, ax = plt.subplots(figsize=(1, 12))
     plt.ylim([hole.Depth.min(), hole.Depth.max()])
     ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
     plt.gca().invert_yaxis()
