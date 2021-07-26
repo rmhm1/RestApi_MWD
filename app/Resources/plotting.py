@@ -66,6 +66,10 @@ def plot_all_features(df, holeID):
     depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
     temp_dict = {'holeID': holeID, 'depth': depth}  # Creates a dictionary for each holeID
     fig, ax = plt.subplots(figsize = (5, 12))  # Generate the figure and axis before loop for reuseability for efficiency
+
+    ax.axes.yaxis.set_ticks(range(int(np.floor(specific_df.Depth.min())),
+                                  int(np.floor(specific_df.Depth.max())) + 1))
+
     for feature in df.columns[1:6]:  # Loop over all relevant features
         ax.plot(specific_df[feature].values, specific_df.Depth, color=color_dict[feature])
 
@@ -125,7 +129,7 @@ def hardness_bar_plot(df, holeID, projectID):
 
     hole = df[df.holeID == holeID] # Grabs the entries of the specific holeID
 
-    fig, ax = plt.subplots(figsize=(4, 12))
+    fig, ax = plt.subplots(figsize=(3, 12))
     plt.ylim([hole.Depth.min(), hole.Depth.max()])
     ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
     plt.gca().invert_yaxis()
