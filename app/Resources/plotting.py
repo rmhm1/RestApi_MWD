@@ -58,7 +58,7 @@ def encode_all_holes(df):
 def all_features_update(df, holeID):
     colors = ['aqua', 'salmon', 'darkviolet', 'palegreen', 'navajowhite']
     color_dict = dict(zip(df.columns[1:6], colors))
-    xlim_dict = dict(zip(df.columns[1:6], [[0, 4.5], [9.5, 25], [35, 60], [40, 75], [0, 4]]))
+    xlim_dict = dict(zip(df.columns[1:6], [[0, 4.5], [9, 28], [33.5 , 62.5], [40, 76], [0, 4]]))
 
     specific_df = df[df.holeID == holeID]  # Grabs the entries of the specific holeID
     depth = specific_df.Depth.max() - specific_df.Depth.min()  # Calculates the overall depth
@@ -200,8 +200,8 @@ def hardness_bar_plot(df, holeID, projectID):
                        Patch(facecolor='red', label='soft')]
 
     ax.axes.xaxis.set_ticks([])
-    plt.title(holeID + ' Hardness', weight = 'bold')
-    lgnd = plt.legend(handles=legend_elements, bbox_to_anchor=[1, 1.008])
+    #plt.title(holeID + ' Hardness', weight = 'bold')
+    plt.legend(handles=legend_elements, bbox_to_anchor=[1, 1.008])
 
     bytes_image = io.BytesIO()
     fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
