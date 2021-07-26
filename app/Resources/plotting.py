@@ -73,7 +73,7 @@ def plot_all_features(df, holeID):
         #plt.xlim([0, 4.5])
         ax.set_facecolor('grey')
         ax.axes.yaxis.set_ticks(range(int(np.floor(specific_df.Depth.min())),
-                                      int(np.floor(specific_df.Depth.max())) + 1))
+                                      int(np.ceil(specific_df.Depth.max())) + 1))
         plt.gca().invert_yaxis()
         plt.ylabel('Depth')
         plt.xlabel(feature)
@@ -130,7 +130,7 @@ def hardness_bar_plot(df, holeID, projectID):
 
     fig, ax = plt.subplots(figsize=(3, 12))
     plt.ylim([hole.Depth.min(), hole.Depth.max()])
-    ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
+    ax.axes.yaxis.set_ticks(range(int(np.floor(hole.Depth.min())), int(np.ceil(hole.Depth.max())) + 1))
     plt.gca().invert_yaxis()
     plt.ylabel('Depth (meters)')
 
