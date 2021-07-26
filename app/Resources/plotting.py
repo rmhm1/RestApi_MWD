@@ -116,7 +116,7 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
     legend2 = ax.legend(*clust.legend_elements(**kw),
                         loc="upper right", title="Depth", labelspacing=1.3, borderpad=.6)
     bytes_image = io.BytesIO()
-    fig.savefig(bytes_image, format='png')
+    fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
     return img_base64.decode()
