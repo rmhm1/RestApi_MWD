@@ -117,7 +117,7 @@ class Clustering(Resource):
             data['Depth'] = mwd_data.Depth
             b64_string = plot_cluster(data, projectID, cluster_labels, args['model'], args['data_type'])
 
-        response = {'image': b64_string}
+        response = {'cluster': b64_string}
         return response
 
 
