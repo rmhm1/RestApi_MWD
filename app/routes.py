@@ -112,7 +112,10 @@ class Clustering(Resource):
         cluster_labels = cluster_data(data, model = args['model'], k = args['k'])
         if args['data_type'] == 'weighted':
             data2D = pd.read_sql('KMeans_WMDS', engine)
-            b64_string = plot_cluster(data2D, projectID, cluster_labels, args['model'], args['mode'])
+            b64_string = plot_cluster(data2D, projectID, cluster_labels, args['model'], args['data_type'])
+        elif args['data_type'] == 'unweighted':
+            data2D = modify_data(mwd_data.iloc[:, 1:6], data_type = 'PCA')
+            b64_string = plot_cluster(data2D, projectID, cluster_labels, args['model'], args['data_type'])
         else:
             data['Depth'] = mwd_data.Depth
             b64_string = plot_cluster(data, projectID, cluster_labels, args['model'], args['data_type'])

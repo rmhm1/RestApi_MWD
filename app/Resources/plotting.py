@@ -93,7 +93,7 @@ def plot_all_features(df, holeID):
 
 
 def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA'):
-    axis_labels = ['PC1', 'PC2'] if (mode == 'PCA') else ['x', 'y']
+    axis_labels = ['PC1', 'PC2'] if (mode == 'PCA' or mode == 'unweighted') else ['x', 'y']
 
     fig, ax = plt.subplots(figsize=(14, 10))
 
