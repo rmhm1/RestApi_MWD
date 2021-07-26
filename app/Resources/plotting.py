@@ -80,7 +80,7 @@ def plot_all_features(df, holeID):
         plt.title(r"$\bf{" + holeID + ": " + feature + "}$")
         plt.grid()
         bytes_image = io.BytesIO()
-        fig.savefig(bytes_image, format='png')
+        fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
         bytes_image.seek(0)
         ## Clear the figure, axis, and close plot to reuse
         plt.cla()
@@ -130,7 +130,7 @@ def hardness_bar_plot(df, holeID, projectID):
 
     fig, ax = plt.subplots(figsize=(3, 12))
     plt.ylim([hole.Depth.min(), hole.Depth.max()])
-    ax.axes.yaxis.set_ticks(range(int(np.floor(hole.Depth.min())), int(np.ceil(hole.Depth.max())) + 1))
+    ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
     plt.gca().invert_yaxis()
     plt.ylabel('Depth (meters)')
 
