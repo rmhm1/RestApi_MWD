@@ -148,7 +148,7 @@ def hardness_bar_plot(df, holeID, projectID):
     lgnd = plt.legend(handles=legend_elements, bbox_to_anchor=[1, 1.008])
 
     bytes_image = io.BytesIO()
-    fig.savefig(bytes_image, format='png', bbox_extra_artists = lgnd)
+    fig.savefig(bytes_image, format='png', bbox_extra_artists = lgnd, bbox_inches = 'tight')
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
     return img_base64.decode()
