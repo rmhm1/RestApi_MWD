@@ -147,7 +147,8 @@ class ClusterByBlastEntry(Resource):
 
         same_cluster = mwd_df[cluster_labels == cluster]
 
-        result = same_cluster.to_json(orient='index')
+        #result = same_cluster.to_json(orient='index')
+        result = same_cluster.to_dict(orient = 'index')
         return result
 
 
