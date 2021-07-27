@@ -212,7 +212,7 @@ def hardness_bar_plot(df, holeID, projectID):
 
 
 def highlight_location(pos, holeID):
-    fig, ax = plt.subplots(figsize=(8, 6))
+    fig, ax = plt.subplots(figsize=(4, 3))
     pos[pos.holeID != holeID].plot.scatter('start_x', 'start_y', s=80, ax=ax, color='black')
     pos[pos.holeID == holeID].plot.scatter('start_x', 'start_y', s=160, color='aqua', ax=ax, edgecolors='black')
     plt.ylabel('Northing' + r' $\longrightarrow$')
