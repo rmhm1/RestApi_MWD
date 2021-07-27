@@ -193,6 +193,7 @@ def hardness_bar_plot(df, holeID, projectID):
     for entry in binned.iterrows():
         rectangle = plt.Rectangle((0, coord), 1, depth_per, fc=colors[entry[1][-1]], linewidth=0)
         ax.add_patch(rectangle)
+
         coord += depth_per
 
     legend_elements = [Patch(facecolor='green', label='hard'),
@@ -205,6 +206,22 @@ def hardness_bar_plot(df, holeID, projectID):
 
     bytes_image = io.BytesIO()
     fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
+    bytes_image.seek(0)
+    img_base64 = base64.b64encode(bytes_image.read())
+    return img_base64.decode()
+
+
+def highlight_location(pos, holeID):
+    fig, ax = plt.subplots(figsize=(8, 6))
+    pos[pos.holeID != holeID].plot.scatter('start_x', 'start_y', s=80, ax=ax, color='black')
+    pos[pos.holeID == holeID].plot.scatter('start_x', 'start_y', s=160, color='aqua', ax=ax, edgecolors='black')
+    plt.ylabel('Northing' + r' $\longrightarrow$')
+    plt.xlabel('Easting' + r' $\longrightarrow$')
+    ax.set_yticks([])
+    ax.set_xticks([])
+
+    bytes_image = io.BytesIO()
+    fig.savefig(bytes_image, format='png', bbox_inches='tight')
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
     return img_base64.decode()

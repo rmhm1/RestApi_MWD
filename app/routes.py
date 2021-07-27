@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
 from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd, plot_all_features, hardness_bar_plot, \
-    all_features_update
+    all_features_update, highlight_location
 import base64
 from .models import BlastReport
 from .Resources.Clustering import cluster_data, modify_data
@@ -58,11 +58,16 @@ class PlotAllFeatures(Resource):
         data = pd.read_sql('MWD', engine)
         data = data[data.projectID == projectID]
 
+        positions = pd.read_sql('HolePositions', engine)
+        positions = positions[positions.projectID == projectID]
+
         #dicts = plot_all_features(data, holeID)
         dicts = all_features_update(data, holeID)
         bar_chart = hardness_bar_plot(data, holeID, projectID)
+        hole_locations = highlight_location(positions, holeID)
 
         dicts['hardness'] = bar_chart
+        dicts['Location'] = hole_locations
 
         return dicts
 
@@ -166,6 +171,13 @@ class HardnessBar(Resource):
 
         response = {'image': b64_string}
         return response
+
+class holeLocation(Resource):
+    def get(self, projectID, holeID):
+        data = pd.read_sql('HolePositions', engine)
+        data = data[data.projectID == projectID]
+
+        location_plot = highlight_location(data, holeID)
 
 
 
