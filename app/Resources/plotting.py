@@ -191,7 +191,7 @@ def hardness_bar_plot(df, holeID, projectID):
 
     coord = hole.Depth.min()
     for entry in binned.iterrows():
-        rectangle = plt.Rectangle((0, coord), 1, depth_per, fc=colors[entry[1][-1]], linewidth=0, fig = fig)
+        rectangle = plt.Rectangle((0, coord), 1, depth_per, fc=colors[entry[1][-1]], linewidth=0, figure = fig)
         ax.add_patch(rectangle)
         del rectangle
 
