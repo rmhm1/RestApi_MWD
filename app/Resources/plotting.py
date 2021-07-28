@@ -191,8 +191,9 @@ def hardness_bar_plot(df, holeID, projectID):
 
     coord = hole.Depth.min()
     for entry in binned.iterrows():
-        rectangle = plt.Rectangle((0, coord), 1, depth_per, fc=colors[entry[1][-1]], linewidth=0)
+        rectangle = plt.Rectangle((0, coord), 1, depth_per, fc=colors[entry[1][-1]], linewidth=0, fig = fig)
         ax.add_patch(rectangle)
+        del rectangle
 
         coord += depth_per
 
@@ -208,11 +209,12 @@ def hardness_bar_plot(df, holeID, projectID):
     fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
+    plt.close()
     return img_base64.decode()
 
 
 def highlight_location(pos, holeID):
-    fig, ax = plt.subplots(figsize=(4, 3))
+    fig, ax = plt.subplots(figsize=(6, 5))
     pos[pos.holeID != holeID].plot.scatter('start_x', 'start_y', s=80, ax=ax, color='black')
     pos[pos.holeID == holeID].plot.scatter('start_x', 'start_y', s=160, color='aqua', ax=ax, edgecolors='black')
     plt.ylabel('Northing' + r' $\longrightarrow$')
