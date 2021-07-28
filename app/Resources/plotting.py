@@ -97,7 +97,7 @@ def all_features_update(df, holeID):
         bytes_image.seek(0)
         img_base64 = base64.b64encode(bytes_image.read())
         temp_dict[feature] = img_base64.decode()
-    plt.close()
+    plt.close(fig)
     return temp_dict
 
 
@@ -166,6 +166,7 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
     fig.savefig(bytes_image, format='png', bbox_inches = 'tight', rasterized = True)
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
+    plt.close(fig)
     return img_base64.decode()
 
 
@@ -197,9 +198,9 @@ def hardness_bar_plot(df, holeID, projectID):
 
         coord += depth_per
 
-    legend_elements = [Patch(facecolor='green', label='hard'),
-                       Patch(facecolor='yellow', label='medium'),
-                       Patch(facecolor='red', label='soft')]
+    legend_elements = [Patch(facecolor='tab:cyan', label='hard'),
+                       Patch(facecolor='tab:gray', label='medium'),
+                       Patch(facecolor='tab:orange', label='soft')]
 
     ax.axes.xaxis.set_ticks([])
     #plt.title(holeID + ' Hardness', weight = 'bold')
@@ -209,7 +210,7 @@ def hardness_bar_plot(df, holeID, projectID):
     fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
-    plt.close()
+    plt.close(fig)
     return img_base64.decode()
 
 
@@ -226,4 +227,5 @@ def highlight_location(pos, holeID):
     fig.savefig(bytes_image, format='png', bbox_inches='tight')
     bytes_image.seek(0)
     img_base64 = base64.b64encode(bytes_image.read())
+    plt.close(fig)
     return img_base64.decode()
