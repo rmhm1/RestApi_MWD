@@ -173,7 +173,7 @@ def hardness_bar_plot(df, holeID, projectID):
     step = 1 if projectID == 'Montana' else 3 # Sets the step size for binning rows together (Not needed for montana)
     hard = 1.8 # Sets boundary for hard rock
     soft = .8 # Sets boundary for soft rock
-    colors = {'hard': 'green', 'medium': 'yellow', 'soft': 'red'} # Sets colors for groups
+    colors = {'hard': 'tab:cyan', 'medium': 'tab:gray', 'soft': 'tab:orange'} # Sets colors for groups
 
     hole = df[df.holeID == holeID] # Grabs the entries of the specific holeID
 
