@@ -184,7 +184,7 @@ class clusterPositions(Resource):
         self.reqparse.add_argument('k', type=int, required=False, default=4)
         self.reqparse.add_argument('model', type=str, required=False, default='agglom')
 
-    def get(self, projectID, holeID):
+    def get(self, projectID):
         args = self.reqparse.parse_args()
         # Gets the position data
         pos = pd.read_sql('HolePositions', engine)
