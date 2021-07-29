@@ -63,10 +63,14 @@ class PlotAllFeatures(Resource):
 
         #dicts = plot_all_features(data, holeID)
         dicts = all_features_update(data, holeID)
-        bar_chart = hardness_bar_plot(data, holeID, projectID)
+        bar_chart1 = hardness_bar_plot(data, holeID, projectID, color_version=0)
+        bar_chart2 = hardness_bar_plot(data, holeID, projectID, color_version=1)
+        bar_chart3 = hardness_bar_plot(data, holeID, projectID, color_version=2)
         hole_locations = highlight_location(positions, holeID)
 
-        dicts['hardness'] = bar_chart
+        dicts['Hardness1'] = bar_chart1
+        dicts['Hardness2'] = bar_chart2
+        dicts['Hardness3'] = bar_chart3
         dicts['Location'] = hole_locations
 
         return dicts

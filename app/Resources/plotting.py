@@ -170,11 +170,13 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
     return img_base64.decode()
 
 
-def hardness_bar_plot(df, holeID, projectID):
+def hardness_bar_plot(df, holeID, projectID, color_version = 0):
     step = 1 if projectID == 'Montana' else 3 # Sets the step size for binning rows together (Not needed for montana)
     hard = 1.8 # Sets boundary for hard rock
     soft = .8 # Sets boundary for soft rock
-    colors = {'hard': 'tab:cyan', 'medium': 'tab:gray', 'soft': 'tab:orange'} # Sets colors for groups
+    color_combos = [['tab:cyan', 'tab:gray', 'tab:orange'], ['red', 'black', 'gold'],
+              ['red', 'yellow', 'blue']]
+    colors = dict(zip(['hard', 'medium', 'soft'], color_combos[color_version]))
 
     hole = df[df.holeID == holeID] # Grabs the entries of the specific holeID
 
@@ -229,3 +231,16 @@ def highlight_location(pos, holeID):
     img_base64 = base64.b64encode(bytes_image.read())
     plt.close(fig)
     return img_base64.decode()
+
+
+def cluster_positions(pos, labels):
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.plot.scatter(pos['start_x'], pos['start_y'], s=160, c=labels, ax=ax, colormap='viridis', edgecolors='black')
+
+    plt.ylabel('Northing' + r' $\longrightarrow$')
+    plt.xlabel('Easting' + r' $\longrightarrow$')
+    ax.set_yticks([])
+    ax.set_xticks([])
+
+
+    plt.close(fig)
