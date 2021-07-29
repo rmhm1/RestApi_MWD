@@ -200,9 +200,9 @@ def hardness_bar_plot(df, holeID, projectID, color_version = 0):
 
         coord += depth_per
 
-    legend_elements = [Patch(facecolor='tab:cyan', label='hard'),
-                       Patch(facecolor='tab:gray', label='medium'),
-                       Patch(facecolor='tab:orange', label='soft')]
+    legend_elements = [Patch(facecolor=color_combos[color_version][0], label='hard'),
+                       Patch(facecolor=color_combos[color_version][1], label='medium'),
+                       Patch(facecolor=color_combos[color_version][2], label='soft')]
 
     ax.axes.xaxis.set_ticks([])
     #plt.title(holeID + ' Hardness', weight = 'bold')
