@@ -202,7 +202,7 @@ class clusterPositions(Resource):
             h = df[df.holeID == hole]
             cluster_id[hole] = h.CID.value_counts().index[0]
 
-        loc_string = cluster_positions(pos, cluster_id.values())
+        loc_string = cluster_positions(pos, list(cluster_id.values()))
         return {'cluster_positions': loc_string}
 
 
