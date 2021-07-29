@@ -234,13 +234,21 @@ def highlight_location(pos, holeID):
 
 
 def cluster_positions(pos, labels):
-    fig, ax = plt.subplots(figsize=(8, 5))
-    ax.plot.scatter(pos['start_x'], pos['start_y'], s=160, c=labels, ax=ax, colormap='viridis', edgecolors='black')
+    holeID_dict = {hole: idx + 1 for idx, hole in enumerate(pos.holeID.unique())}
 
-    plt.ylabel('Northing' + r' $\longrightarrow$')
-    plt.xlabel('Easting' + r' $\longrightarrow$')
+    fig, ax = plt.subplots(figsize=(8, 5))
+    ax.scatter(pos['start_x'], pos['start_y'], s=160, c=labels, cmap='viridis', edgecolors='black')
+    for hole, num in holeID_dict.items():
+        ax.text(x=pos[pos.holeID == hole].start_x - .4, y=pos[pos.holeID == hole].start_y + .18, s=str(num))
+
+    plt.ylabel(' '.join(('Northing', r'$\longrightarrow$')))
+    plt.xlabel(' '.join(('Easting', r'$\longrightarrow$')))
     ax.set_yticks([])
     ax.set_xticks([])
 
-
+    bytes_image = io.BytesIO()
+    fig.savefig(bytes_image, format='png', bbox_inches='tight')
+    bytes_image.seek(0)
+    img_base64 = base64.b64encode(bytes_image.read())
     plt.close(fig)
+    return img_base64.decode()

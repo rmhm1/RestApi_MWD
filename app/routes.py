@@ -2,7 +2,7 @@ from flask_restful import Resource, reqparse, Api
 from flask import jsonify, json, current_app as app
 from . import engine, db
 from .Resources.plotting import plot_rate, plot_cluster, encode_all_holes, pd, plot_all_features, hardness_bar_plot, \
-    all_features_update, highlight_location
+    all_features_update, highlight_location, cluster_positions
 import base64
 from .models import BlastReport
 from .Resources.Clustering import cluster_data, modify_data
@@ -176,12 +176,28 @@ class HardnessBar(Resource):
         response = {'image': b64_string}
         return response
 
-class holeLocation(Resource):
-    def get(self, projectID, holeID):
-        data = pd.read_sql('HolePositions', engine)
-        data = data[data.projectID == projectID]
 
-        location_plot = highlight_location(data, holeID)
+class clusterPositions(Resource):
+    def __init__(self):
+        self.reqparse = reqparse.RequestParser()
+        self.reqparse.add_argument('data_type', type=str, required=False, default='PCA')
+        self.reqparse.add_argument('k', type=int, required=False, default=4)
+        self.reqparse.add_argument('model', type=str, required=False, default='agglom')
+
+    def get(self, projectID, holeID):
+        args = self.reqparse.parse_args()
+        # Gets the position data
+        pos = pd.read_sql('HolePositions', engine)
+        pos = pos[pos.projectID == projectID]
+        # Gets the actual MWD data
+        df = pd.read_sql('MWD', engine)
+        df = df[df.projectID == projectID]
+        # Clusters the data and gets the labels
+        data = modify_data(df.iloc[:, 1:6], args['data_type'])
+        cluster_labels = cluster_data(data, model=args['model'], k=args['k'])
+
+        loc_string = cluster_positions(pos, cluster_labels)
+        return {'cluster_positions': loc_string}
 
 
 
@@ -193,6 +209,7 @@ api.add_resource(PlotAllFeatures, '/<string:projectID>/<string:holeID>/AllFeatur
 api.add_resource(PlotAllHoles, '/<string:projectID>/AllPlots')
 api.add_resource(Report, '/<string:projectID>/BlastReport')
 # api.add_resource(Report, '/<string:projectID>/<string:holeID>/BlastReport')
-api.add_resource(Clustering, '/<string:projectID>/Cluster')
+#api.add_resource(Clustering, '/<string:projectID>/Cluster')
 api.add_resource(ClusterByBlastEntry, '/<string:projectID>/ClusterByEntry')
 api.add_resource(HardnessBar, '/<string:projectID>/<string:holeID>/HardnessBarChart')
+api.add_resource(clusterPositions, '/<string:projectID>/Cluster')
