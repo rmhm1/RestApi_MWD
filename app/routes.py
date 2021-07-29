@@ -195,8 +195,14 @@ class clusterPositions(Resource):
         # Clusters the data and gets the labels
         data = modify_data(df.iloc[:, 1:6], args['data_type'])
         cluster_labels = cluster_data(data, model=args['model'], k=args['k'])
+        df['CID'] = cluster_labels
 
-        loc_string = cluster_positions(pos, cluster_labels)
+        cluster_id = {}
+        for hole in df.holeID.unique():
+            h = df[df.holeID == hole]
+            cluster_id[hole] = h.CID.value_counts().index[0]
+
+        loc_string = cluster_positions(pos, cluster_id.values())
         return {'cluster_positions': loc_string}
 
 
