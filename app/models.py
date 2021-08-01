@@ -10,11 +10,12 @@ class MWD(db.Model):
     PercPressure = db.Column(db.Float)
     FeedPressure = db.Column(db.Float)
     RotPressure = db.Column(db.Float)
-    InstRotPressure = db.Column(db.Float)
+    InstPentRate = db.Column(db.Float)
     holeID = db.Column(db.String(32))
     depth = db.Column(db.Float)
     Time = db.Column(db.String(50))
     projectID = db.Column(db.String(50), primary_key=True)
+    plan_name = db.Column(db.String(60))
 
 
 # class Montana(MWD, db.Model):

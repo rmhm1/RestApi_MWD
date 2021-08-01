@@ -182,7 +182,7 @@ class clusterPositions(Resource):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('data_type', type=str, required=False, default='PCA')
         self.reqparse.add_argument('k', type=int, required=False, default=4)
-        self.reqparse.add_argument('model', type=str, required=False, default='agglom')
+        self.reqparse.add_argument('model', type=str, required=False, default='kmeans')
 
     def get(self, projectID):
         args = self.reqparse.parse_args()

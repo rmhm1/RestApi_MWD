@@ -236,7 +236,7 @@ def highlight_location(pos, holeID):
 def cluster_positions(pos, labels):
     holeID_dict = {hole: idx + 1 for idx, hole in enumerate(pos.holeID.unique())}
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(12, 8))
     ax.scatter(pos['start_x'], pos['start_y'], s=160, c=labels, cmap='viridis', edgecolors='black')
     for hole, num in holeID_dict.items():
         ax.text(x=pos[pos.holeID == hole].start_x - .4, y=pos[pos.holeID == hole].start_y + .18, s=str(num))
