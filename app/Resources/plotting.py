@@ -209,7 +209,7 @@ def hardness_bar_plot(df, holeID, projectID, color_version = 0):
 
     ax.axes.xaxis.set_ticks([])
     #plt.title(holeID + ' Hardness', weight = 'bold')
-    plt.legend(handles=legend_elements, bbox_to_anchor=[1, 1.008])
+    plt.legend(handles=legend_elements, bbox_to_anchor=[1, 1.008], facecolor = 'darkgrey')
 
     bytes_image = io.BytesIO()
     fig.savefig(bytes_image, format='png', bbox_inches = 'tight')
