@@ -181,8 +181,10 @@ def hardness_bar_plot(df, holeID, projectID, color_version = 0):
     hole = df[df.holeID == holeID] # Grabs the entries of the specific holeID
 
     fig, ax = plt.subplots(figsize=(1, 12))
-    plt.ylim([hole.Depth.min(), hole.Depth.max()])
-    ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
+    #plt.ylim([hole.Depth.min(), hole.Depth.max()])
+    plt.ylim([0, hole.Depth.max()])
+    #ax.axes.yaxis.set_ticks(range(int(np.ceil(hole.Depth.min())), int(np.floor(hole.Depth.max())) + 1))
+    ax.axes.yaxis.set_ticks(range(int(np.floor(hole.Depth.min())), int(np.ceil(hole.Depth.max())) + 1))
     plt.gca().invert_yaxis()
     plt.ylabel('Depth (meters)')
 
