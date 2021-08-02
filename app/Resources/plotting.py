@@ -172,8 +172,8 @@ def plot_cluster(data2D, projectID, labels, model = 'Agglomerative', mode = 'PCA
 
 def hardness_bar_plot(df, holeID, projectID, color_version = 0):
     step = 1 if projectID == 'Montana' else 3 # Sets the step size for binning rows together (Not needed for montana)
-    hard = 1.8 # Sets boundary for hard rock
-    soft = .8 # Sets boundary for soft rock
+    soft = 1.8 # Sets boundary for hard rock
+    hard = .8 # Sets boundary for soft rock
     color_combos = [['tab:cyan', 'tab:gray', 'tab:orange'], ['red', 'black', 'gold'],
               ['red', 'yellow', 'blue']]
     colors = dict(zip(['hard', 'medium', 'soft'], color_combos[color_version]))
@@ -191,7 +191,7 @@ def hardness_bar_plot(df, holeID, projectID, color_version = 0):
     binned = hole.groupby(hole.index // step).PenetrRate.mean()
     binned = pd.DataFrame(binned, columns=['PenetrRate'])
     binned['Hardness'] = binned.PenetrRate.map(
-        lambda rate: 'soft' if rate <= soft else 'hard' if rate >= hard else 'medium')
+        lambda rate: 'soft' if rate >= soft else 'hard' if rate <= hard else 'medium')
     depth_per = (hole.Depth.max() - hole.Depth.min()) / len(binned)
 
     coord = hole.Depth.min()
