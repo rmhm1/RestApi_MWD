@@ -221,14 +221,14 @@ def hardness_bar_plot(df, holeID, projectID, color_version = 0):
 
 
 def highlight_location(pos, holeID):
-    fig, ax = plt.subplots(figsize=(6, 5))
-    pos[pos.holeID != holeID].plot.scatter('start_x', 'start_y', s=80, ax=ax, color='black')
-    pos[pos.holeID == holeID].plot.scatter('start_x', 'start_y', s=160, color='aqua', ax=ax, edgecolors='black')
+    fig, ax = plt.subplots(figsize=(5, 4))
+    pos[pos.holeID != holeID].plot.scatter('start_x', 'start_y', s=100, ax=ax, color='black')
+    pos[pos.holeID == holeID].plot.scatter('start_x', 'start_y', s=200, color='aqua', ax=ax, edgecolors='black')
     plt.ylabel('Northing' + r' $\longrightarrow$')
     plt.xlabel('Easting' + r' $\longrightarrow$')
     ax.set_yticks([])
     ax.set_xticks([])
-
+    plt.ylim([pos.start_y.min() - 12, pos.start_y.max() + 12])
     bytes_image = io.BytesIO()
     fig.savefig(bytes_image, format='png', bbox_inches='tight')
     bytes_image.seek(0)
@@ -243,8 +243,8 @@ def cluster_positions(pos, labels):
     fig, ax = plt.subplots(figsize=(12, 8))
     ax.scatter(pos['start_x'], pos['start_y'], s=160, c=labels, cmap='viridis', edgecolors='black')
     for hole, num in holeID_dict.items():
-        ax.text(x=pos[pos.holeID == hole].start_x - .4, y=pos[pos.holeID == hole].start_y + .18, s=str(num))
-
+        ax.text(x=pos[pos.holeID == hole].start_x - .8, y=pos[pos.holeID == hole].start_y + 1.2, s=str(num))
+    plt.ylim([pos.start_y.min() - 10, pos.start_y.max() + 15])
     plt.ylabel(' '.join(('Northing', r'$\longrightarrow$')))
     plt.xlabel(' '.join(('Easting', r'$\longrightarrow$')))
     ax.set_yticks([])
