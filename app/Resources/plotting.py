@@ -243,7 +243,7 @@ def cluster_positions(pos, labels):
     fig, ax = plt.subplots(figsize=(12, 8))
     ax.scatter(pos['start_x'], pos['start_y'], s=160, c=labels, cmap='viridis', edgecolors='black')
     for hole, num in holeID_dict.items():
-        ax.text(x=pos[pos.holeID == hole].start_x - .8, y=pos[pos.holeID == hole].start_y + 1.2, s=str(num))
+        ax.text(x=pos[pos.holeID == hole].start_x - .6, y=pos[pos.holeID == hole].start_y + .75, s=str(num))
     plt.ylim([pos.start_y.min() - 10, pos.start_y.max() + 15])
     plt.ylabel(' '.join(('Northing', r'$\longrightarrow$')))
     plt.xlabel(' '.join(('Easting', r'$\longrightarrow$')))
